@@ -1,0 +1,379 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pellet Prices Chart</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/pellet-bag-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icon-180x180.png">
+<link rel="manifest" href="/site.webmanifest">
+  <style>
+    :root {
+      --bg: #f6f1e8;
+      --ink: #2b2a28;
+      --accent: #2f6b5a;
+      --card: #ffffff;
+    }
+    body {
+      margin: 0;
+      font-family: "Georgia", "Times New Roman", serif;
+      background: radial-gradient(circle at 20% 20%, #fff8ee 0%, var(--bg) 60%);
+      color: var(--ink);
+    }
+    header {
+      padding: 28px 24px 8px;
+    }
+    h1 {
+      margin: 0 0 6px;
+      letter-spacing: 0.4px;
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 24px 32px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid #e4ddd2;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    }
+    .meta {
+      display: flex;
+      gap: 18px;
+      flex-wrap: wrap;
+      font-size: 14px;
+      color: #5c5a55;
+    }
+    canvas {
+      max-height: 520px;
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <h1>Pellet price history (PLN/kg)</h1>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <main class="wrap">
+    <div class="card">
+      <canvas id="priceChart"></canvas>
+    </div>
+    <div class="card" style="margin-top: 16px;">
+      <h2 style="margin: 0 0 10px;">Latest prices</h2>
+      <table style="width:100%; border-collapse: collapse; font-size: 14px;">
+        <thead>
+          <tr style="text-align:left; border-bottom: 1px solid #e4ddd2;">
+            <th style="padding: 8px 6px;">Product</th>
+            <th style="padding: 8px 6px;">Variant</th>
+            <th style="padding: 8px 6px;">Last total PLN</th>
+            <th style="padding: 8px 6px;">Last PLN/kg</th>
+          </tr>
+        </thead>
+        <tbody id="latestBody"></tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top: 16px;">
+      <canvas id="outlookChart"></canvas>
+    </div>
+    <div class="card" style="margin-top: 16px;">
+      <h2 style="margin: 0 0 10px;">Mocked 3‑month outlook</h2>
+      <table style="width:100%; border-collapse: collapse; font-size: 14px;">
+        <thead>
+          <tr style="text-align:left; border-bottom: 1px solid #e4ddd2;">
+            <th style="padding: 8px 6px;">Month</th>
+            <th style="padding: 8px 6px;">Product</th>
+            <th style="padding: 8px 6px;">Variant</th>
+            <th style="padding: 8px 6px;">Est. PLN/kg</th>
+          </tr>
+        </thead>
+        <tbody id="outlookBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script>
+    const colors = [
+      "#1b9e77", "#d95f02", "#7570b3", "#e7298a",
+      "#66a61e", "#e6ab02", "#a6761d", "#1f78b4",
+      "#b2df8a", "#fb9a99", "#cab2d6", "#6a3d9a",
+    ];
+
+    function buildOutlookTable(latestBySeries) {
+      const tbody = document.getElementById("outlookBody");
+      tbody.innerHTML = "";
+
+      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+      const now = new Date();
+      const months = [1, 2, 3].map((offset) => {
+        const d = new Date(now.getFullYear(), now.getMonth() + offset, 1);
+        return `${monthNames[d.getMonth()]} ${d.getFullYear()}`;
+      });
+
+      const seriesList = Array.from(latestBySeries.values());
+      months.forEach((monthLabel, monthIdx) => {
+        seriesList.forEach((s, idx) => {
+          // Deterministic mock trend: small monthly drift based on index
+          const drift = (idx % 3 === 0 ? -0.015 : idx % 3 === 1 ? 0.01 : 0.005);
+          const estimate = s.perKgPrice != null
+            ? (s.perKgPrice * (1 + drift * (monthIdx + 1)))
+            : null;
+
+          const tr = document.createElement("tr");
+          tr.style.borderBottom = "1px solid #eee6dc";
+
+          const cells = [
+            monthLabel,
+            s.product,
+            s.variant,
+            estimate != null ? estimate.toFixed(2) : "n/a",
+          ];
+          cells.forEach((val) => {
+            const td = document.createElement("td");
+            td.style.padding = "8px 6px";
+            td.textContent = val;
+            tr.appendChild(td);
+          });
+
+          tbody.appendChild(tr);
+        });
+      });
+
+      if (tbody.lastElementChild) {
+        tbody.lastElementChild.style.borderBottom = "none";
+      }
+    }
+
+    function buildLatestTable(latestBySeries) {
+      const tbody = document.getElementById("latestBody");
+      tbody.innerHTML = "";
+
+      const seriesList = Array.from(latestBySeries.values());
+      seriesList.forEach((s, idx) => {
+        const tr = document.createElement("tr");
+        tr.style.borderBottom = "1px solid #eee6dc";
+
+        const cells = [
+          s.product,
+          s.variant,
+          s.totalPrice != null ? s.totalPrice.toFixed(2) : "n/a",
+          s.perKgPrice != null ? s.perKgPrice.toFixed(3) : "n/a",
+        ];
+        cells.forEach((val) => {
+          const td = document.createElement("td");
+          td.style.padding = "8px 6px";
+          td.textContent = val;
+          tr.appendChild(td);
+        });
+
+        tbody.appendChild(tr);
+      });
+
+      if (tbody.lastElementChild) {
+        tbody.lastElementChild.style.borderBottom = "none";
+      }
+    }
+
+    function buildDailyOutlook(latestBySeries) {
+      const today = new Date();
+      const end = new Date(today.getFullYear(), today.getMonth() + 3, today.getDate());
+
+      const labels = [];
+      const dates = [];
+      for (let d = new Date(today); d <= end; d.setDate(d.getDate() + 1)) {
+        const iso = new Date(d).toISOString().slice(0, 10);
+        labels.push(iso);
+        dates.push(new Date(d));
+      }
+
+      const datasets = Array.from(latestBySeries.values()).map((s, idx) => {
+        const base = s.perKgPrice ?? 0;
+        const phase = (idx % 5) * 0.6;
+        const drift = (idx % 3 === 0 ? -0.0008 : idx % 3 === 1 ? 0.0006 : 0.0003);
+        const amplitude = base * (0.012 + (idx % 4) * 0.004);
+
+        const data = dates.map((_, dayIdx) => {
+          if (s.perKgPrice == null) return null;
+          const seasonal = Math.sin((dayIdx / 14) + phase) * amplitude;
+          const trend = base * (1 + drift * dayIdx);
+          return Math.max(0, trend + seasonal);
+        });
+
+        return {
+          label: `${s.product} — ${s.variant}`,
+          data,
+          borderColor: colors[idx % colors.length],
+          backgroundColor: colors[idx % colors.length],
+          tension: 0.25,
+          spanGaps: true,
+        };
+      });
+
+      const ctx = document.getElementById("outlookChart");
+      new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          scales: {
+            y: { title: { display: true, text: "Mocked PLN per kg" } },
+            x: { title: { display: true, text: "Date" } },
+          },
+          plugins: {
+            legend: { position: "bottom" },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y?.toFixed(2) ?? "n/a"}`
+              }
+            }
+          }
+        }
+      });
+    }
+
+    async function loadAndRender() {
+      const [historyRes, latestRes] = await Promise.all([
+        fetch("./pellet_prices.jsonl", { cache: "no-store" }),
+        fetch("./pellet_prices_latest.json", { cache: "no-store" }),
+      ]);
+
+      if (!historyRes.ok) {
+        throw new Error(`Failed to load pellet_prices.jsonl: ${historyRes.status}`);
+      }
+      if (!latestRes.ok) {
+        throw new Error(`Failed to load pellet_prices_latest.json: ${latestRes.status}`);
+      }
+
+      const historyText = await historyRes.text();
+      const historySnapshots = historyText
+        .split("\n")
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => JSON.parse(line));
+
+      const latestSnapshot = await latestRes.json();
+
+      const snapshots = historySnapshots.length ? historySnapshots : [latestSnapshot];
+      const labels = snapshots.map(s => s.fetched_at);
+
+      const seriesMap = new Map();
+
+      snapshots.forEach((snap, i) => {
+        (snap.items || []).forEach(item => {
+          if (item.variants && item.variants.length) {
+            item.variants.forEach(v => {
+              const key = `${item.url}::${v.label}`.toLowerCase();
+              if (!seriesMap.has(key)) {
+              seriesMap.set(key, {
+                label: `${item.title || item.url} — ${v.label}`,
+                data: Array(labels.length).fill(null),
+                totals: Array(labels.length).fill(null),
+              });
+            }
+            seriesMap.get(key).data[i] = v.price_pln_per_kg ?? null;
+            seriesMap.get(key).totals[i] = v.price_pln_total ?? null;
+          });
+        } else {
+          const key = `${item.url}::single`.toLowerCase();
+          if (!seriesMap.has(key)) {
+            seriesMap.set(key, {
+              label: item.title || item.url,
+              data: Array(labels.length).fill(null),
+              totals: Array(labels.length).fill(null),
+            });
+          }
+          seriesMap.get(key).data[i] = item.price_pln_per_kg ?? null;
+          seriesMap.get(key).totals[i] = item.price_pln_total ?? null;
+        }
+      });
+    });
+
+      const datasets = Array.from(seriesMap.values()).map((s, idx) => ({
+        label: s.label,
+        data: s.data,
+        borderColor: colors[idx % colors.length],
+        backgroundColor: colors[idx % colors.length],
+        tension: 0.25,
+        spanGaps: true,
+      }));
+
+      const ctx = document.getElementById("priceChart");
+      new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          scales: {
+            y: { title: { display: true, text: "PLN per kg" } },
+            x: { title: { display: true, text: "Fetched at" } },
+          },
+          plugins: {
+            legend: { position: "bottom" },
+            tooltip: {
+              callbacks: {
+                label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y ?? "n/a"}`
+              }
+            }
+          }
+        }
+      });
+
+      const meta = document.getElementById("meta");
+      meta.textContent = `Snapshots: ${snapshots.length} • Series: ${datasets.length}`;
+
+      const latestBySeries = new Map();
+      const latestSeriesMap = new Map();
+      (latestSnapshot.items || []).forEach(item => {
+        if (item.variants && item.variants.length) {
+          item.variants.forEach(v => {
+            const key = `${item.url}::${v.label}`.toLowerCase();
+            latestSeriesMap.set(key, {
+              product: item.title || item.url,
+              variant: v.label,
+              perKgPrice: v.price_pln_per_kg ?? null,
+              totalPrice: v.price_pln_total ?? null,
+            });
+          });
+        } else {
+          const key = `${item.url}::single`.toLowerCase();
+          latestSeriesMap.set(key, {
+            product: item.title || item.url,
+            variant: "single",
+            perKgPrice: item.price_pln_per_kg ?? null,
+            totalPrice: item.price_pln_total ?? null,
+          });
+        }
+      });
+
+      seriesMap.forEach((s, key) => {
+        if (latestSeriesMap.has(key)) {
+          latestBySeries.set(key, latestSeriesMap.get(key));
+        } else {
+          const lastPerKg = [...s.data].reverse().find(v => v != null);
+          const lastTotal = [...s.totals].reverse().find(v => v != null);
+          latestBySeries.set(key, {
+            product: (s.label || "").split(" — ")[0] || "Unknown",
+            variant: (s.label || "").split(" — ")[1] || "single",
+            perKgPrice: lastPerKg,
+            totalPrice: lastTotal,
+          });
+        }
+      });
+      buildLatestTable(latestBySeries);
+      buildOutlookTable(latestBySeries);
+      buildDailyOutlook(latestBySeries);
+    }
+
+    loadAndRender().catch((err) => {
+      const meta = document.getElementById("meta");
+      meta.textContent = `Error: ${err.message}`;
+      console.error(err);
+    });
+  </script>
+</body>
+</html>

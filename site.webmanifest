@@ -1,0 +1,19 @@
+{
+  "name": "Pellet Bag",
+  "short_name": "Pellets",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#F59E0B",
+  "background_color": "#FFFFFF",
+  "display": "standalone"
+}
