@@ -26,6 +26,7 @@ URLS = [
     "https://pellet4future.com/pellet-drzewny-granulita.html",
     "https://wolebio.pl/produkt/pellet-gold/",
     "https://wolebio.pl/produkt/pellet-olimp-6-mm-5/",
+    "https://wolebio.pl/produkt/pellet-lava-premium/"
 ]
 
 # OUTPUT FILES
@@ -37,9 +38,8 @@ OUT_LOG = Path("runs.txt")
 TZ = ZoneInfo("Europe/Warsaw")
 
 # ================= PELLET4FUTURE CONSTANTS =================
-# These are now HARD-CODED (no env vars)
 
-P4F_POSTAL_CODE = "41-949"
+P4F_POSTAL_CODE = "40-000"
 P4F_PALLETS = 1
 
 
