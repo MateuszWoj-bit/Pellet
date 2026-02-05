@@ -4,17 +4,17 @@ __pycache__/
 .venv/
 .env
 
-# Data outputs
-pellet_prices.csv
-pellet_prices.json
-pellet_prices.jsonl
-pellet_prices_latest.json
-runs.txt
-txt.txt
+# Data outputs (tracked for history)
+# - pellet_prices.csv
+# - pellet_prices.jsonl
+# - pellet_prices_latest.json
+# - runs.txt
+# - txt.txt
 
 # Local/archived fetches
 Archive fetch/
 
+text.txt
 adres.txt
 schtasks
 head-snippet.html
