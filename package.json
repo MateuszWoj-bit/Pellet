@@ -1,0 +1,12 @@
+{
+  "name": "pellet",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Pellet price tracker and reports",
+  "scripts": {
+    "format": "prettier --write \"**/*.{html,css,js,json,md,yml,yaml}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.2.5"
+  }
+}
