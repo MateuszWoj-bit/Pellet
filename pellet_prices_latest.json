@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-02-06T08:14:13+01:00",
+  "fetched_at": "2026-02-07T08:02:48+01:00",
   "items": [
     {
       "url": "https://pellet4future.com/pellet-drzewny-freetime-2010-llc-solid-teploenergo.html",
@@ -54,18 +54,18 @@
     },
     {
       "url": "https://wolebio.pl/produkt/pellet-olimp-6-mm-5/",
-      "title": "Strona nie została znaleziona - WoleBio.pl",
+      "title": "WoleBio.pl: Pellet OLIMP Stelmet | Pellet A1 | Bezpłatna Dostawa",
       "currency": "PLN",
-      "price_pln_total": null,
-      "weight_kg_total": null,
-      "price_pln_per_kg": null,
+      "price_pln_total": 2179.0,
+      "weight_kg_total": 975.0,
+      "price_pln_per_kg": 2.234872,
       "variants": [],
-      "raw_price": null,
-      "price_method": null,
+      "raw_price": "2179,00 zł",
+      "price_method": "woocommerce",
       "raw_weight": null,
       "weight_method": null,
       "error": null,
-      "http_status": 404,
+      "http_status": 200,
       "final_url": "https://wolebio.pl/produkt/pellet-olimp-6-mm-5/",
       "content_type": "text/html; charset=UTF-8"
     },
