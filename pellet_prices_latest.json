@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-02-09T08:32:32+01:00",
+  "fetched_at": "2026-02-10T08:32:36+01:00",
   "items": [
     {
       "url": "https://pellet4future.com/pellet-drzewny-freetime-2010-llc-solid-teploenergo.html",
@@ -37,18 +37,18 @@
     },
     {
       "url": "https://wolebio.pl/produkt/pellet-gold/",
-      "title": "WoleBio.pl: Pellet GOLD | Pellet Energy | Pellet A1",
+      "title": "Strona nie została znaleziona - WoleBio.pl",
       "currency": "PLN",
-      "price_pln_total": 1935.0,
-      "weight_kg_total": 975.0,
-      "price_pln_per_kg": 1.984615,
+      "price_pln_total": null,
+      "weight_kg_total": null,
+      "price_pln_per_kg": null,
       "variants": [],
-      "raw_price": "1935,00 zł",
-      "price_method": "woocommerce",
+      "raw_price": null,
+      "price_method": null,
       "raw_weight": null,
       "weight_method": null,
       "error": null,
-      "http_status": 200,
+      "http_status": 404,
       "final_url": "https://wolebio.pl/produkt/pellet-gold/",
       "content_type": "text/html; charset=UTF-8"
     },
