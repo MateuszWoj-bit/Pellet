@@ -29,10 +29,10 @@ args = parse_args()
 csv_path = str(Path(args.input).resolve())
 xlsx_path = str(Path(args.output).resolve())
 
-with open(csv_path, newline='', encoding='utf-8') as f:
+with open(csv_path, newline='', encoding='utf-8-sig') as f:
     rows = list(csv.reader(f))
 
-headers = rows[0]
+headers = [h.strip() for h in rows[0]]
 data = rows[1:]
 
 wb = xlsxwriter.Workbook(xlsx_path, {'remove_timezone': True})
