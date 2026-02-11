@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""Track pellet prices from target shop pages and persist snapshots."""
 
 from __future__ import annotations
+
+# pylint: disable=invalid-name
 
 import csv
 import json
@@ -10,7 +13,7 @@ import time
 from dataclasses import dataclass, asdict, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional, List, Tuple
+from typing import Optional, List, Tuple
 from zoneinfo import ZoneInfo
 
 import requests
@@ -47,6 +50,8 @@ P4F_PALLETS = 1
 
 @dataclass
 class VariantResult:
+    """One parsed variant with optional weight and price metrics."""
+
     label: str
     weight_kg: Optional[float]
     price_pln_total: Optional[float]
@@ -58,6 +63,8 @@ class VariantResult:
 
 @dataclass
 class PageResult:
+    """Parsed output for one source URL, including optional variants."""
+
     url: str
     title: Optional[str]
     currency: str = "PLN"
@@ -82,14 +89,20 @@ class PageResult:
 # ================= HELPERS =================
 
 def now_iso() -> str:
+    """Return local Warsaw timestamp in ISO format with seconds precision."""
+
     return datetime.now(TZ).isoformat(timespec="seconds")
 
 
 def _norm(s: str) -> str:
+    """Normalize whitespace and NBSP characters in extracted text."""
+
     return re.sub(r"\s+", " ", (s or "").replace("\xa0", " ")).strip()
 
 
 def _to_float_pl(s: str) -> Optional[float]:
+    """Parse first decimal number from a Polish-formatted numeric string."""
+
     if not s:
         return None
     s = s.replace(" ", "").replace(",", ".")
@@ -112,7 +125,7 @@ def _decode_html_bytes(raw: bytes, declared: Optional[str]) -> str:
     for enc in candidates:
         try:
             text = raw.decode(enc, errors="replace")
-        except Exception:
+        except LookupError:
             continue
         bad = text.count("�")
         if best_bad is None or bad < best_bad:
@@ -127,6 +140,8 @@ def _decode_html_bytes(raw: bytes, declared: Optional[str]) -> str:
 # ================= WOO PRICE FALLBACK =================
 
 def extract_price_pln_fallback(soup: BeautifulSoup):
+    """Extract WooCommerce price text and parsed PLN value from the page."""
+
     for n in soup.select(".woocommerce-Price-amount"):
         raw = n.get_text(" ", strip=True)
         m = re.search(r"(\d[\d\s.,]*)\s*(zł|zl)", raw, re.I)
@@ -138,7 +153,9 @@ def extract_price_pln_fallback(soup: BeautifulSoup):
 # ================= PLAYWRIGHT (PELLET4FUTURE) =================
 
 def fetch_pellet4future_rendered_html(url: str) -> str:
-    from playwright.sync_api import sync_playwright
+    """Render Pellet4Future page with Playwright and return resulting HTML."""
+
+    from playwright.sync_api import sync_playwright  # pylint: disable=import-outside-toplevel
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -181,6 +198,8 @@ def fetch_pellet4future_rendered_html(url: str) -> str:
 
 
 def extract_pellet4future_offers(html: str) -> List[VariantResult]:
+    """Parse rendered Pellet4Future offer cards into structured variants."""
+
     # Cut related products completely
     m = re.search(r"Produkty\s+powiązane", html, re.I)
     if m:
@@ -218,7 +237,9 @@ def extract_pellet4future_offers(html: str) -> List[VariantResult]:
 
 
 def fetch_pellet4future_rendered_html_v2(url: str) -> str:
-    from playwright.sync_api import sync_playwright
+    """Render Pellet4Future page using more tolerant button detection."""
+
+    from playwright.sync_api import sync_playwright  # pylint: disable=import-outside-toplevel
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -252,7 +273,8 @@ def fetch_pellet4future_rendered_html_v2(url: str) -> str:
             btn.first.click()
 
         page.wait_for_function(
-            "() => /ID\\s*Produktu\\s*\\d+/i.test(document.body.innerText) || /Cena\\s*regularna/i.test(document.body.innerText)"
+            "() => /ID\\s*Produktu\\s*\\d+/i.test(document.body.innerText) "
+            "|| /Cena\\s*regularna/i.test(document.body.innerText)"
         )
 
         html = page.content()
@@ -261,6 +283,8 @@ def fetch_pellet4future_rendered_html_v2(url: str) -> str:
 
 
 def extract_pellet4future_offers_v2(html: str) -> List[VariantResult]:
+    """Parse Pellet4Future offers with resilient regex matching."""
+
     # Cut related products completely
     m = re.search(r"Produkty\s+powi[aą]zane", html, re.I)
     if m:
@@ -305,7 +329,9 @@ def extract_pellet4future_offers_v2(html: str) -> List[VariantResult]:
     return results
 
 
-def extract_pellet4future_fallback(rendered_html: str) -> Tuple[Optional[float], Optional[float], Optional[str]]:
+def extract_pellet4future_fallback(
+    rendered_html: str,
+) -> Tuple[Optional[float], Optional[float], Optional[str]]:
     """
     Fallback when offer cards are missing:
     try to read a single price + weight from rendered HTML.
@@ -328,6 +354,8 @@ def extract_pellet4future_fallback(rendered_html: str) -> Tuple[Optional[float],
 # ================= FETCH =================
 
 def make_session():
+    """Create a requests session with retry and UA defaults."""
+
     s = requests.Session()
     s.mount("https://", HTTPAdapter(max_retries=Retry(total=3)))
     s.headers["User-Agent"] = "PelletTracker/FINAL"
@@ -337,6 +365,8 @@ def make_session():
 # ================= PARSE =================
 
 def parse_page(url: str, html: str, meta: dict) -> PageResult:
+    """Parse one page into a normalized result record."""
+
     soup = BeautifulSoup(html, "lxml")
     title = soup.title.string.strip() if soup.title else None
 
@@ -377,6 +407,8 @@ def parse_page(url: str, html: str, meta: dict) -> PageResult:
 # ================= SAVE =================
 
 def save(run_time: str, results: List[PageResult]):
+    """Persist current run output to JSON, JSONL, CSV and run log."""
+
     payload = {"fetched_at": run_time, "items": [asdict(r) for r in results]}
 
     OUT_LATEST_JSON.write_text(
@@ -423,6 +455,8 @@ def save(run_time: str, results: List[PageResult]):
 # ================= MAIN =================
 
 def main():
+    """Fetch all configured URLs, parse results, then save snapshots."""
+
     run_time = now_iso()
     session = make_session()
     results = []
