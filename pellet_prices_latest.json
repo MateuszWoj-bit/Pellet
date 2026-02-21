@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-02-19T08:15:52+01:00",
+  "fetched_at": "2026-02-21T08:02:04+01:00",
   "items": [
     {
       "url": "https://pellet4future.com/pellet-drzewny-freetime-2010-llc-solid-teploenergo.html",
@@ -73,11 +73,11 @@
       "url": "https://wolebio.pl/produkt/pellet-lava-premium/",
       "title": "WoleBio.pl: Pellet LAVA | LAVA Stelmet | Darmowa Dostawa",
       "currency": "PLN",
-      "price_pln_total": 2055.0,
+      "price_pln_total": 2417.0,
       "weight_kg_total": 975.0,
-      "price_pln_per_kg": 2.107692,
+      "price_pln_per_kg": 2.478974,
       "variants": [],
-      "raw_price": "2055,00 zł",
+      "raw_price": "2417,00 zł",
       "price_method": "woocommerce",
       "raw_weight": null,
       "weight_method": null,
