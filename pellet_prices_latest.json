@@ -1,15 +1,15 @@
 {
-  "fetched_at": "2026-04-02T09:41:48+02:00",
+  "fetched_at": "2026-04-03T09:37:18+02:00",
   "items": [
     {
       "url": "https://pellet4future.com/pellet-drzewny-freetime-2010-llc-solid-teploenergo.html",
       "title": "Pellet drzewny SOLID Teploenergo l Porównaj oferty l Pellet4Future",
       "currency": "PLN",
-      "price_pln_total": 1689.0,
+      "price_pln_total": 1744.2,
       "weight_kg_total": 975.0,
-      "price_pln_per_kg": 1.732308,
+      "price_pln_per_kg": 1.788923,
       "variants": [],
-      "raw_price": "1 689,00 zł",
+      "raw_price": "1 744,20 zł",
       "price_method": "pellet4future:fallback",
       "raw_weight": null,
       "weight_method": null,
