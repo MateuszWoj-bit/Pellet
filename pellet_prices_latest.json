@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-08T09:58:06+02:00",
+  "fetched_at": "2026-05-11T12:00:10+02:00",
   "items": [
     {
       "url": "https://pellet4future.com/pellet-drzewny-freetime-2010-llc-solid-teploenergo.html",
@@ -37,54 +37,54 @@
     },
     {
       "url": "https://wolebio.pl/produkt/pellet-gold/",
-      "title": "WoleBio.pl: Pellet GOLD | Pellet Energy | Pellet A1",
+      "title": "Błąd 404",
       "currency": "PLN",
-      "price_pln_total": 1885.0,
-      "weight_kg_total": 975.0,
-      "price_pln_per_kg": 1.933333,
+      "price_pln_total": null,
+      "weight_kg_total": null,
+      "price_pln_per_kg": null,
       "variants": [],
-      "raw_price": "1885,00 zł",
-      "price_method": "woocommerce",
+      "raw_price": null,
+      "price_method": null,
       "raw_weight": null,
       "weight_method": null,
       "error": null,
-      "http_status": 200,
+      "http_status": 404,
       "final_url": "https://wolebio.pl/produkt/pellet-gold/",
-      "content_type": "text/html; charset=UTF-8"
+      "content_type": "text/html; charset=utf-8"
     },
     {
       "url": "https://wolebio.pl/produkt/pellet-olimp-6-mm-5/",
-      "title": "WoleBio.pl: Pellet OLIMP Stelmet | Pellet A1 | Bezpłatna Dostawa",
+      "title": "Błąd 404",
       "currency": "PLN",
-      "price_pln_total": 1939.0,
-      "weight_kg_total": 975.0,
-      "price_pln_per_kg": 1.988718,
+      "price_pln_total": null,
+      "weight_kg_total": null,
+      "price_pln_per_kg": null,
       "variants": [],
-      "raw_price": "1939,00 zł",
-      "price_method": "woocommerce",
+      "raw_price": null,
+      "price_method": null,
       "raw_weight": null,
       "weight_method": null,
       "error": null,
-      "http_status": 200,
+      "http_status": 404,
       "final_url": "https://wolebio.pl/produkt/pellet-olimp-6-mm-5/",
-      "content_type": "text/html; charset=UTF-8"
+      "content_type": "text/html; charset=utf-8"
     },
     {
       "url": "https://wolebio.pl/produkt/pellet-lava-premium/",
-      "title": "WoleBio.pl: Pellet LAVA | LAVA Stelmet | Darmowa Dostawa",
+      "title": "Błąd 404",
       "currency": "PLN",
-      "price_pln_total": 1890.0,
-      "weight_kg_total": 975.0,
-      "price_pln_per_kg": 1.938462,
+      "price_pln_total": null,
+      "weight_kg_total": null,
+      "price_pln_per_kg": null,
       "variants": [],
-      "raw_price": "1890,00 zł",
-      "price_method": "woocommerce",
+      "raw_price": null,
+      "price_method": null,
       "raw_weight": null,
       "weight_method": null,
       "error": null,
-      "http_status": 200,
+      "http_status": 404,
       "final_url": "https://wolebio.pl/produkt/pellet-lava-premium/",
-      "content_type": "text/html; charset=UTF-8"
+      "content_type": "text/html; charset=utf-8"
     }
   ]
 }
