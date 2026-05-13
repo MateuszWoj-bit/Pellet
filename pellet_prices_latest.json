@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-12T11:12:25+02:00",
+  "fetched_at": "2026-05-13T11:19:27+02:00",
   "items": [
     {
       "url": "https://pellet4future.com/pellet-drzewny-freetime-2010-llc-solid-teploenergo.html",
@@ -22,11 +22,11 @@
       "url": "https://pellet4future.com/pellet-drzewny-granulita.html",
       "title": "Pellet drzewny Granulita ENplus A1 DINplus l Porównaj oferty l Pellet4Future",
       "currency": "PLN",
-      "price_pln_total": 1844.2,
+      "price_pln_total": 1845.0,
       "weight_kg_total": 975.0,
-      "price_pln_per_kg": 1.891487,
+      "price_pln_per_kg": 1.892308,
       "variants": [],
-      "raw_price": "1 844,20 zł",
+      "raw_price": "1 845,00 zł",
       "price_method": "pellet4future:fallback",
       "raw_weight": null,
       "weight_method": null,
