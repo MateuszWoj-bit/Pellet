@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-05-15T11:24:31+02:00",
+  "fetched_at": "2026-05-16T10:19:39+02:00",
   "items": [
     {
       "url": "https://pellet4future.com/pellet-drzewny-freetime-2010-llc-solid-teploenergo.html",
@@ -37,7 +37,7 @@
     },
     {
       "url": "https://wolebio.pl/produkt/pellet-gold/",
-      "title": "Błąd 404",
+      "title": "WoleBio.pl: Pellet Gold | Pellet Energy | EnPlus A1",
       "currency": "PLN",
       "price_pln_total": null,
       "weight_kg_total": null,
@@ -48,13 +48,13 @@
       "raw_weight": null,
       "weight_method": null,
       "error": null,
-      "http_status": 404,
-      "final_url": "https://wolebio.pl/produkt/pellet-gold/",
+      "http_status": 200,
+      "final_url": "https://wolebio.pl/17-pellet-gold.html",
       "content_type": "text/html; charset=utf-8"
     },
     {
       "url": "https://wolebio.pl/produkt/pellet-olimp-6-mm-5/",
-      "title": "Błąd 404",
+      "title": "Pellet Olimp Stelmet | EnPlus A1 | Bezpłatna Dostawa | WoleBio.pl",
       "currency": "PLN",
       "price_pln_total": null,
       "weight_kg_total": null,
@@ -65,13 +65,13 @@
       "raw_weight": null,
       "weight_method": null,
       "error": null,
-      "http_status": 404,
-      "final_url": "https://wolebio.pl/produkt/pellet-olimp-6-mm-5/",
+      "http_status": 200,
+      "final_url": "https://wolebio.pl/29-pellet-olimp-6-mm-5.html",
       "content_type": "text/html; charset=utf-8"
     },
     {
       "url": "https://wolebio.pl/produkt/pellet-lava-premium/",
-      "title": "Błąd 404",
+      "title": "WoleBio.pl: Pellet Lava | Lava Stelmet | Darmowa Dostawa",
       "currency": "PLN",
       "price_pln_total": null,
       "weight_kg_total": null,
@@ -82,8 +82,8 @@
       "raw_weight": null,
       "weight_method": null,
       "error": null,
-      "http_status": 404,
-      "final_url": "https://wolebio.pl/produkt/pellet-lava-premium/",
+      "http_status": 200,
+      "final_url": "https://wolebio.pl/21-pellet-lava-premium.html",
       "content_type": "text/html; charset=utf-8"
     }
   ]
